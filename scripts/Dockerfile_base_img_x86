@@ -1,0 +1,13 @@
+FROM debian:bullseye
+
+# Update apt repos
+RUN apt update --allow-unauthenticated
+RUN apt upgrade -y
+
+# Install packages
+RUN apt -y install git
+RUN apt -y install curl wget vim
+RUN apt -y install libtool libcurl4-openssl-dev
+RUN apt -y install cmake make automake
+RUN apt -y install g++ clang
+RUN apt -y install python3-dev

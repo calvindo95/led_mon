@@ -1,0 +1,19 @@
+FROM led_mon-base-img
+
+ENV HOME=/home/webserver
+ENV LED_MON_EXEC=/usr/local/bin/led_mon
+ENV LED_MON_LIB=/usr/local/lib
+ENV LD_LIBRARY_PATH=${LED_MON_LIB}
+
+RUN useradd -ms /bin/bash webserver
+WORKDIR /home/webserver/
+
+RUN git clone -b test https://github.com/calvindo95/led_mon.git && \
+    cd led_mon/include && wget https://github.com/nlohmann/json/releases/download/v3.11.2/json.hpp && cd .. && \
+    mkdir build && cd build && \
+    cmake .. && \
+    cmake --build . -j4 --target install
+
+USER webserver
+WORKDIR /home/webserver/
+CMD ["/home/webserver/led_mon/scripts/run_server.sh"]
