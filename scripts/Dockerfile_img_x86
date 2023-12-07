@@ -2,6 +2,9 @@ FROM led_mon-base-img
 
 # set user; everything below is under user webserver
 ENV HOME=/home/webserver
+ENV LED_MON_EXEC=/usr/local/bin/led_mon
+ENV LED_MON_LIB=/usr/local/lib
+
 RUN useradd -ms /bin/bash webserver
 USER webserver
 WORKDIR /home/webserver/
@@ -13,4 +16,4 @@ RUN git clone -b develop https://github.com/calvindo95/led_mon.git && \
     cmake --build . -j4
 
 WORKDIR /home/webserver/
-#CMD ["./scripts/run_server.sh"]
+CMD ["/home/webserver/led_mon/scripts/run_server.sh"]
