@@ -1,0 +1,16 @@
+FROM led_mon-base-img
+
+# set user; everything below is under user webserver
+ENV HOME=/home/webserver
+RUN useradd -ms /bin/bash webserver
+USER webserver
+WORKDIR /home/webserver/
+
+RUN git clone -b develop https://github.com/calvindo95/led_mon.git && \
+    cd led_mon/include && wget https://github.com/nlohmann/json/releases/download/v3.11.2/json.hpp && cd .. && \
+    mkdir build && cd build && \
+    cmake .. && \
+    cmake --build . -j4
+
+WORKDIR /home/webserver/
+#CMD ["./scripts/run_server.sh"]
