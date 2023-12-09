@@ -4,6 +4,7 @@ Config::Config(){
     update_config("HTTP_SERVER_IP");
     update_config("HTTP_SERVER_PORT");
     update_config("uSECONDS");
+    update_config("PER_CPU");
 }
 
 Config& Config::get_config(){
