@@ -25,6 +25,7 @@ sudo sh scripts/attach.sh led_mon
 
 ## TODO
 - [ ] Create Config wrapper class to get environment variables - mainly for defining future http server ip and port
+- [ ] Update build scripts to accept ip and port env vars
 - [ ] Create curl class to post json to http server
 - [ ] Create arm variant of docker image
 - [ ] Maybe create a better python wrapper class for C/C++ functions
