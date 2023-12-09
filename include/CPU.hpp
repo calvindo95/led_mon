@@ -7,8 +7,12 @@
 #include <sstream>
 #include <iomanip>
 #include <numeric>
+#include <unistd.h>
+#include <atomic>
+#include <thread>
 
 #include <FixedDeque.hpp> // wrapper deque class to calculate rolling average
+#include <TSQueue.hpp>
 
 class CPU{
     private:
@@ -22,13 +26,24 @@ class CPU{
 
         std::vector<last_values> vec_lv;
 
+        bool m_flag = false;
+        TSQueue<std::vector<double>> m_que;
+        std::mutex m_mutex;
+        std::condition_variable m_cond;
+
+        void monitor_cpu();
+
     public:
         CPU();
+
+        std::vector<double> calc_per_cpu();
+        std::vector<double> get_per_cpu();
+
+        double get_cpu u();
+
         void print_per_cpu();   // prints per core cpu usage
         void print_cpu();       // prints overall cpu usage
 
-        std::vector<double> get_per_cpu();
-        double get_cpu();
 
         int numProcessors;
 };
