@@ -8,5 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_COMPILER /usr/bin/gcc CACHE PATH "")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -g" CACHE STRING "compile flags" FORCE)
 
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIR})
+
 ## add directories
 add_subdirectory(source)

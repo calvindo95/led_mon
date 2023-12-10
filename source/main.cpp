@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include <CPU.hpp>
+#include <PostJson.hpp>
 
 int main()
 {
@@ -26,6 +27,10 @@ int main()
         while(true){
             double cpu_val = cpu.get_cpu();
             std::cout << cpu_val << std::endl;
+
+            PostJson pj(cpu.numProcessors, cpu_val);
+            pj.post_json();
+
             usleep(1000000);
         }
     }
