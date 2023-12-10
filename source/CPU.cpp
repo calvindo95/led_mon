@@ -25,10 +25,44 @@ CPU::CPU(){
 
         vec_lv.push_back(lv);
     }
+
+    // initialize monitoring thread
+    std::thread t1(&CPU::monitor_cpu, this);
+    t1.detach();
+}
+
+void CPU::monitor_cpu(){
+    Config& config = Config::get_config();
+
+    bool per_cpu;
+    std::istringstream(config.get_env_var("PER_CPU")) >> std::boolalpha >> per_cpu;
+
+    // if multi or single cpu
+    if(per_cpu){
+        while(true){
+            std::vector<double> cpu_vals = calc_per_cpu();
+            if(m_flag){
+                m_que_per_cpu.push(cpu_vals);
+                m_flag = false;
+            }
+            usleep(200000);
+        }
+    }
+    else{
+        while(true){
+            double cpu_val = calc_cpu();
+            if(m_flag){
+                m_que_cpu.push(cpu_val);
+                m_flag = false;
+            }
+            usleep(200000);
+        }
+    }
+
 }
 
 void CPU::print_per_cpu(){
-    std::vector<double> cpu_vals = get_per_cpu();
+    std::vector<double> cpu_vals = calc_per_cpu();
 
     for(int i = 0; i < cpu_vals.size(); i++){
         std::cout << cpu_vals[i] << std::endl;
@@ -36,6 +70,11 @@ void CPU::print_per_cpu(){
 }
 
 std::vector<double> CPU::get_per_cpu(){
+    m_flag = true;
+    return m_que_per_cpu.pop();
+}
+
+std::vector<double> CPU::calc_per_cpu(){
     std::vector<double> cpu_vals;
     std::ifstream file("/proc/stat");
     std::string proc_stat_line;
@@ -68,8 +107,6 @@ std::vector<double> CPU::get_per_cpu(){
 
                     vec_lv[i].fd.push_back(percent);
                     cpu_vals.push_back(vec_lv[i].fd.get_avg());
-
-                    //std::cout << std::setw(3) << i << ": " << vec_lv[i].fd.get_avg()  << std::endl;
                 }
 
                 vec_lv[i].lastTotalUser = totalUser;
@@ -83,12 +120,17 @@ std::vector<double> CPU::get_per_cpu(){
 }
 
 void CPU::print_cpu(){
-    double cpu_val = get_cpu();
+    double cpu_val = calc_cpu();
 
     std::cout << cpu_val << std::endl;
 }
 
 double CPU::get_cpu(){
+    m_flag = true;
+    return m_que_cpu.pop();
+}
+
+double CPU::calc_cpu(){
     std::ifstream file("/proc/stat");
     std::string proc_stat_line;
     std::string temp_str;
@@ -141,9 +183,9 @@ extern "C"{
         cpu.print_per_cpu();
     }
 
-    double* get_Per_CPU(int size){
+    double* calc_Per_CPU(int size){
         // Convert vector to array
-        std::vector<double> tmp_vec = cpu.get_per_cpu();
+        std::vector<double> tmp_vec = cpu.calc_per_cpu();
         double* d_arr = new double[size];
 
         std::copy(tmp_vec.begin(), tmp_vec.end(), d_arr);
@@ -155,8 +197,8 @@ extern "C"{
         delete obj;
     }
 
-    double get_CPU(){
-        double d_tmp = cpu.get_cpu();
+    double calc_CPU(){
+        double d_tmp = cpu.calc_cpu();
         return d_tmp;
     }
 
