@@ -1,4 +1,4 @@
-../CMakeLists.txt 
+#pragma once
 
 #include <iostream>
 #include <sstream>
