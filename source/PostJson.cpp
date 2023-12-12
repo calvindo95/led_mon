@@ -1,12 +1,29 @@
 #include <PostJson.hpp>
 
-PostJson::PostJson(int num_processors, double cpu_val):m_num_processors(num_processors), m_cpu_val(cpu_val){
+PostJson::PostJson(double cpu_val):m_num_processors(0), m_cpu_val(cpu_val){
+    parse_json();
+}
+
+PostJson::PostJson(int num_processors, std::vector<double> cpu_vals):m_num_processors(num_processors), m_cpu_vals(cpu_vals){
     parse_json();
 }
 
 void PostJson::parse_json(){
     m_json["cpuNum"] = m_num_processors;
-    m_json["cpu"] = m_cpu_val;
+
+    // Parse json as single cpu
+    if(m_num_processors == 0){
+        m_json["cpu"] = m_cpu_val;
+    }
+    // Parse json as multi cpu
+    else{
+        for(int i = 0; i < m_num_processors; i++){
+            std::stringstream ss;
+            ss << "cpu" << i;
+
+            m_json[ss.str()] = m_cpu_vals[i];
+        }
+    }
 
     std::cout << m_json.dump() << std::endl;
 }
