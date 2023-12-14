@@ -31,7 +31,7 @@ int main()
             PostJson pj(cpu_val);
             pj.post_json();
 
-            usleep(1000000);
+            usleep(500000);
         }
     }
 } 

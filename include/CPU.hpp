@@ -27,7 +27,8 @@ class CPU{
         };
 
         std::vector<last_values> vec_lv;
-        bool m_flag = false;
+        std::atomic<bool> m_flag = false;
+        std::mutex m_mutex;
 
         // queue for per cpu
         TSQueue<std::vector<double>> m_que_per_cpu;
