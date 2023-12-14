@@ -39,7 +39,7 @@ void CPU::monitor_cpu(){
 
     // if multi or single cpu
     if(per_cpu){
-        while(true){
+        while(true){       
             std::vector<double> cpu_vals = calc_per_cpu();
             if(m_flag){
                 m_que_per_cpu.push(cpu_vals);
@@ -50,11 +50,14 @@ void CPU::monitor_cpu(){
     }
     else{
         while(true){
+            std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
             double cpu_val = calc_cpu();
             if(m_flag){
                 m_que_cpu.push(cpu_val);
                 m_flag = false;
             }
+            std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+            std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() << "[ns]" << std::endl;
             usleep(200000);
         }
     }
