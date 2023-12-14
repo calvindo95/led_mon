@@ -17,12 +17,12 @@ int main()
     // if multi or single cpu
     if(per_cpu){
         while(true){
-            std::vector<double> vals = cpu.get_per_cpu();
+            std::vector<double> vals = cpu.calc_per_cpu();
 
             PostJson pj(cpu.numProcessors, vals);
             pj.post_json();
 
-            usleep(1000000);
+            usleep(200000);
         }
     }
     else{
@@ -35,7 +35,7 @@ int main()
             PostJson pj(cpu_val);
             pj.post_json();
             
-            usleep(500000);
+            usleep(200000);
         }
     }
 } 

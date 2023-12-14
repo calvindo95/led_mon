@@ -23,29 +23,16 @@ class CPU{
             unsigned long long lastTotalUserLow;
             unsigned long long lastTotalSys;
             unsigned long long lastTotalIdle;
-            FixedDeque<double,5> fd;
+            FixedDeque<double,20> fd;
         };
 
         std::vector<last_values> vec_lv;
-        std::atomic<bool> m_flag;
-        std::mutex m_mutex;
-
-        // queue for per cpu
-        TSQueue<std::vector<double>> m_que_per_cpu;
-        
-        // queue for single cpu
-        TSQueue<double> m_que_cpu;
-
-        void monitor_cpu();
 
     public:
         CPU();
 
         std::vector<double> calc_per_cpu();
-        std::vector<double> get_per_cpu();
-
         double calc_cpu();
-        double get_cpu();
 
         void print_per_cpu();   // prints per core cpu usage
         void print_cpu();       // prints overall cpu usage
