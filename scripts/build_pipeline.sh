@@ -1,5 +1,5 @@
 if [ $# -lt 0 ]; then # checks if number of arguments is less than 1
-    echo "Usage: 'sh pipeine.sh"
+    echo "Usage: 'sh build_pipeine.sh <HTTP_SERVER_IP> <HTTP_SERVER_PORT> <PER_CPU(true/false)>"
     return 1
 fi
 
@@ -25,7 +25,7 @@ then
 
     yes | docker container prune
 
-    sh scripts/spinup.sh ${FINAL_IMG} ${CONTAINER_NAME}
+    sh scripts/spinup.sh ${FINAL_IMG} ${CONTAINER_NAME} $1 $2 $3
 else
     echo "${BASE_IMG} img does not exist, building base img"
     sh scripts/build_img.sh ${BASE_DOCKERFILE} ${BASE_IMG}
