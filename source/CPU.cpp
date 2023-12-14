@@ -27,8 +27,8 @@ CPU::CPU(){
     }
 
     // initialize monitoring thread
-    std::thread t1(&CPU::monitor_cpu, this);
-    t1.detach();
+    //std::thread t1(&CPU::monitor_cpu, this);
+    //t1.detach();
 }
 
 void CPU::monitor_cpu(){
