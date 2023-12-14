@@ -10,7 +10,6 @@
 #include <unistd.h>
 #include <atomic>
 #include <thread>
-#include <chrono>
 
 #include <FixedDeque.hpp> // wrapper deque class to calculate rolling average
 #include <TSQueue.hpp>
