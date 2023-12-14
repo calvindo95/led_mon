@@ -25,7 +25,7 @@ void PostJson::parse_json(){
         }
     }
 
-    std::cout << m_json.dump() << std::endl;
+    //std::cout << m_json.dump() << std::endl;
 }
 
 void PostJson::post_json(){
