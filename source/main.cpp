@@ -29,11 +29,11 @@ int main()
         double cpu_val;
         while(true){
             cpu_val = cpu.calc_cpu();
-            
+
             PostJson pj(cpu_val);
             pj.post_json();
             
-            usleep(200000);
+            usleep(100000);
         }
     }
 } 

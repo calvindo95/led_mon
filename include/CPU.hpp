@@ -23,7 +23,7 @@ class CPU{
             unsigned long long lastTotalUserLow;
             unsigned long long lastTotalSys;
             unsigned long long lastTotalIdle;
-            FixedDeque<double,20> fd;
+            FixedDeque<double,10> fd;
         };
 
         std::vector<last_values> vec_lv;
