@@ -20,6 +20,6 @@ RUN git clone -b test https://github.com/calvindo95/led_mon.git && \
     cmake .. && \
     cmake --build . -j4 --target install
 
-USER webserver
+#USER webserver
 WORKDIR /home/webserver/
 CMD ["/home/webserver/led_mon/scripts/run_server.sh"]
