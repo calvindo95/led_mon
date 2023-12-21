@@ -1,6 +1,6 @@
 #include <PostJson.hpp>
 
-PostJson::PostJson(double cpu_val):m_num_processors(0), m_cpu_val(cpu_val){
+PostJson::PostJson(double cpu_val):m_num_processors(1), m_cpu_val(cpu_val){
     parse_json();
 }
 
@@ -12,8 +12,8 @@ void PostJson::parse_json(){
     m_json["cpuNum"] = m_num_processors;
 
     // Parse json as single cpu
-    if(m_num_processors == 0){
-        m_json["cpu"] = m_cpu_val;
+    if(m_num_processors == 1){
+        m_json["cpu0"] = m_cpu_val;
     }
     // Parse json as multi cpu
     else{
@@ -46,7 +46,7 @@ void PostJson::post_json(){
 
         std::stringstream ss;
         ss << "http://" << config.get_env_var("HTTP_SERVER_IP") << ":" << config.get_env_var("HTTP_SERVER_PORT");
-        
+        std::cout << ss.str() << std::endl;
         curl_easy_setopt(curl, CURLOPT_URL, ss.str().c_str());
         curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, m_json.dump().c_str());
 
