@@ -49,6 +49,7 @@ void PostJson::post_json(){
         std::cout << ss.str() << std::endl;
         curl_easy_setopt(curl, CURLOPT_URL, ss.str().c_str());
         curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, m_json.dump().c_str());
+        std::cout << m_json.dump().c_str() << std::endl;
 
         res = curl_easy_perform(curl);
 
