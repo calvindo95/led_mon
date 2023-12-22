@@ -9,7 +9,7 @@ PostJson::PostJson(int num_processors, std::vector<double> cpu_vals):m_num_proce
 }
 
 void PostJson::parse_json(){
-    m_json["cpuNum"] = m_num_processors;
+    m_json["cpuNum"] = m_num_processors-1;
 
     // Parse json as single cpu
     if(m_num_processors == 1){
