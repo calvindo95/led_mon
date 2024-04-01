@@ -22,7 +22,7 @@ int main()
             PostJson pj(cpu.numProcessors, vals);
             pj.post_json();
 
-            usleep(200000);
+            usleep(std::stoi(config.get_env_var("uSECONDS")));
         }
     }
     else{
@@ -33,7 +33,7 @@ int main()
             PostJson pj(cpu_val);
             pj.post_json();
             
-            usleep(100000);
+            usleep(std::stoi(config.get_env_var("uSECONDS")));
         }
     }
 } 
