@@ -23,7 +23,7 @@ class CPU{
             unsigned long long lastTotalUserLow;
             unsigned long long lastTotalSys;
             unsigned long long lastTotalIdle;
-            FixedDeque<double,5> fd;
+            FixedDeque<double,10> fd;
         };
 
         std::vector<last_values> vec_lv;
@@ -40,11 +40,11 @@ class CPU{
     public:
         CPU();
 
-        std::vector<double> calc_per_cpu();
-        std::vector<double> get_per_cpu();
-
+        std::vector<double> calc_multi_cpu();
         double calc_cpu();
-        double get_cpu();
+
+        void print_multi_cpu();   // prints per core cpu usage
+        void print_cpu();       // prints overall cpu usage
 
         void print_per_cpu();   // prints per core cpu usage
         void print_cpu();       // prints overall cpu usage

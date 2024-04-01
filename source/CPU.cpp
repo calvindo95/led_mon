@@ -61,20 +61,15 @@ void CPU::monitor_cpu(){
 
 }
 
-void CPU::print_per_cpu(){
-    std::vector<double> cpu_vals = calc_per_cpu();
+void CPU::print_multi_cpu(){
+    std::vector<double> cpu_vals = calc_multi_cpu();
 
     for(int i = 0; i < cpu_vals.size(); i++){
         std::cout << cpu_vals[i] << std::endl;
     }
 }
 
-std::vector<double> CPU::get_per_cpu(){
-    m_flag = true;
-    return m_que_per_cpu.pop();
-}
-
-std::vector<double> CPU::calc_per_cpu(){
+std::vector<double> CPU::calc_multi_cpu(){
     std::vector<double> cpu_vals;
     std::ifstream file("/proc/stat");
     std::string proc_stat_line;
@@ -123,11 +118,6 @@ void CPU::print_cpu(){
     double cpu_val = calc_cpu();
 
     std::cout << cpu_val << std::endl;
-}
-
-double CPU::get_cpu(){
-    m_flag = true;
-    return m_que_cpu.pop();
 }
 
 double CPU::calc_cpu(){
@@ -180,12 +170,13 @@ extern "C"{
     } 
 
     void print_Per_CPU(){
-        cpu.print_per_cpu();
+        cpu.print_multi_cpu();
     }
 
     double* calc_Per_CPU(int size){
         // Convert vector to array
-        std::vector<double> tmp_vec = cpu.calc_per_cpu();
+        std::vector<double> tmp_vec = cpu.calc_multi_cpu();
+
         double* d_arr = new double[size];
 
         std::copy(tmp_vec.begin(), tmp_vec.end(), d_arr);

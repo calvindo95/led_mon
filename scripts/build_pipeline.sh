@@ -1,5 +1,5 @@
 if [ $# -lt 0 ]; then # checks if number of arguments is less than 1
-    echo "Usage: 'sh pipeine.sh"
+    echo "Usage: 'sh build_pipeine.sh"
     return 1
 fi
 

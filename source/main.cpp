@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ostream>
 #include <unistd.h>
+#include <chrono>
 
 #include <CPU.hpp>
 #include <PostJson.hpp>
@@ -16,22 +17,23 @@ int main()
     // if multi or single cpu
     if(per_cpu){
         while(true){
-            std::vector<double> vals = cpu.get_per_cpu();
-            for(int i = 0; i < vals.size(); i++){
-                std::cout << "CPU" << i << ": " << vals[i] << std::endl;
-            }
-            usleep(1000000);
+            std::vector<double> vals = cpu.calc_multi_cpu();
+
+            PostJson pj(cpu.numProcessors, vals);
+            pj.post_json();
+
+            usleep(std::stoi(config.get_env_var("uSECONDS")));
         }
     }
     else{
+        double cpu_val;
         while(true){
-            double cpu_val = cpu.get_cpu();
-            std::cout << cpu_val << std::endl;
+            cpu_val = cpu.calc_cpu();
 
-            PostJson pj(cpu.numProcessors, cpu_val);
+            PostJson pj(cpu_val);
             pj.post_json();
-
-            usleep(1000000);
+            
+            usleep(std::stoi(config.get_env_var("uSECONDS")));
         }
     }
 } 

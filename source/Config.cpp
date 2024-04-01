@@ -1,6 +1,7 @@
 #include <Config.hpp>
 
 Config::Config(){
+    update_config("LED_MON_SETTINGS_JSON");
     update_config("HTTP_SERVER_IP");
     update_config("HTTP_SERVER_PORT");
     update_config("uSECONDS");
@@ -16,6 +17,7 @@ void Config::update_config(const char* env_var){
     std::stringstream ss;
     char* buffer = getenv(env_var);
 
+    // Check env vars first --> takes precedent
     if(buffer != NULL){
         try{
             env_vars.insert(std::pair<std::string,std::string>(env_var,buffer));
@@ -27,9 +29,25 @@ void Config::update_config(const char* env_var){
             return;
         }
     }
+    else{
+        std::cout << "INFO: " << env_var << " env var is not set, checking json" << std::endl;
+        
+        std::ifstream ifs;
+        ifs.open(get_env_var("LED_MON_SETTINGS_JSON"));
 
-    ss << "ERROR: " << env_var << " is not set" << std::endl;
-    std::cout << ss.str() << std::endl;
+        json j = json::parse(ifs);
+        
+        ifs.close();
+
+        if (j.contains(env_var)){
+            std::cout << "INFO: " << env_var << " found in " << get_env_var("LED_MON_SETTINGS_JSON") << std::endl;
+
+            env_vars.insert(std::pair<std::string,std::string>(env_var,j.at(env_var)));
+        }
+        else{
+            std::cerr << "ERROR: " << env_var << " not found in " << get_env_var("LED_MON_SETTINGS_JSON") << std::endl;
+        }
+    }
 }
 
 std::string Config::get_env_var(const char* env_var){

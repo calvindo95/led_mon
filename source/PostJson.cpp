@@ -1,14 +1,32 @@
 #include <PostJson.hpp>
 
-PostJson::PostJson(int num_processors, double cpu_val):m_num_processors(num_processors), m_cpu_val(cpu_val){
+PostJson::PostJson(double cpu_val):m_num_processors(1), m_cpu_val(cpu_val){
+    parse_json();
+}
+
+PostJson::PostJson(int num_processors, std::vector<double> cpu_vals):m_num_processors(num_processors), m_cpu_vals(cpu_vals){
     parse_json();
 }
 
 void PostJson::parse_json(){
-    m_json["cpuNum"] = m_num_processors;
-    m_json["cpu"] = m_cpu_val;
+    m_json["cpuNum"] = m_num_processors-1;
 
-    std::cout << m_json.dump() << std::endl;
+    // Parse json as single cpu
+    if(m_num_processors == 1){
+        m_json["CPU"]["cpu0"] = m_cpu_val;
+    }
+    // Parse json as multi cpu
+    else{
+        for(int i = 0; i < m_num_processors; i++){
+            std::stringstream ss;
+            ss << "cpu" << i;
+
+            m_json["CPU"][ss.str()] = m_cpu_vals[i];
+        }
+    }
+
+    // Uncomment this to debug json file being posted to led_mon_server
+    //std::cout << m_json.dump() << std::endl;
 }
 
 void PostJson::post_json(){
@@ -29,7 +47,7 @@ void PostJson::post_json(){
 
         std::stringstream ss;
         ss << "http://" << config.get_env_var("HTTP_SERVER_IP") << ":" << config.get_env_var("HTTP_SERVER_PORT");
-        
+
         curl_easy_setopt(curl, CURLOPT_URL, ss.str().c_str());
         curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, m_json.dump().c_str());
 
