@@ -25,7 +25,8 @@ void PostJson::parse_json(){
         }
     }
 
-    std::cout << m_json.dump() << std::endl;
+    // Uncomment this to debug json file being posted to led_mon_server
+    //std::cout << m_json.dump() << std::endl;
 }
 
 void PostJson::post_json(){
@@ -46,7 +47,7 @@ void PostJson::post_json(){
 
         std::stringstream ss;
         ss << "http://" << config.get_env_var("HTTP_SERVER_IP") << ":" << config.get_env_var("HTTP_SERVER_PORT");
-        std::cout << ss.str() << std::endl;
+
         curl_easy_setopt(curl, CURLOPT_URL, ss.str().c_str());
         curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, m_json.dump().c_str());
 
