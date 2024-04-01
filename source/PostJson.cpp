@@ -13,7 +13,7 @@ void PostJson::parse_json(){
 
     // Parse json as single cpu
     if(m_num_processors == 1){
-        m_json["cpu0"] = m_cpu_val;
+        m_json["CPU"]["cpu0"] = m_cpu_val;
     }
     // Parse json as multi cpu
     else{
@@ -21,7 +21,7 @@ void PostJson::parse_json(){
             std::stringstream ss;
             ss << "cpu" << i;
 
-            m_json[ss.str()] = m_cpu_vals[i];
+            m_json["CPU"][ss.str()] = m_cpu_vals[i];
         }
     }
 
