@@ -5,6 +5,11 @@
 #include <string>
 #include <type_traits>
 #include <map>
+#include <fstream>
+
+#include <json.hpp>
+
+using json = nlohmann::json;
 
 // Singleton class to store env vars
 class Config{
