@@ -1,5 +1,5 @@
 if [ $# -lt 0 ]; then # checks if number of arguments is less than 1
-    echo "Usage: 'sh build_pipeine.sh <HTTP_SERVER_IP> <HTTP_SERVER_PORT> <PER_CPU(true/false)>"
+    echo "Usage: 'sh build_pipeine.sh"
     return 1
 fi
 

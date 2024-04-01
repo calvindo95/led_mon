@@ -1,6 +1,7 @@
 # Builds a Docker Image with the supplied Dockerfile
 
 export DOCKERFILE=$1
+export IMAGE_NAME=$2
 
 echo "Building docker image with ${DOCKERFILE}"
 if [ $# -lt 2 ]; then # checks if number of arguments is less than 1
@@ -16,7 +17,7 @@ else
         mynetv6-1
 
         # build docker image
-        docker buildx build -f ${DOCKERFILE} -t $2 --no-cache .
+        docker buildx build -f ${DOCKERFILE} -t $IMAGE_NAME --no-cache .
     else
         echo "Dockerfile supplied does not exist"
     fi
