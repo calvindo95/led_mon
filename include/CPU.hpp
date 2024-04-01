@@ -31,10 +31,10 @@ class CPU{
     public:
         CPU();
 
-        std::vector<double> calc_per_cpu();
+        std::vector<double> calc_multi_cpu();
         double calc_cpu();
 
-        void print_per_cpu();   // prints per core cpu usage
+        void print_multi_cpu();   // prints per core cpu usage
         void print_cpu();       // prints overall cpu usage
 
 

@@ -17,7 +17,7 @@ int main()
     // if multi or single cpu
     if(per_cpu){
         while(true){
-            std::vector<double> vals = cpu.calc_per_cpu();
+            std::vector<double> vals = cpu.calc_multi_cpu();
 
             PostJson pj(cpu.numProcessors, vals);
             pj.post_json();
