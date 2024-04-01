@@ -36,19 +36,18 @@ void Config::update_config(const char* env_var){
         ifs.open(get_env_var("LED_MON_SETTINGS_JSON"));
 
         json j = json::parse(ifs);
+        
+        ifs.close();
 
         if (j.contains(env_var)){
-            std::cout << "Config: " << env_var << " found in " << get_env_var("LED_MON_SETTINGS_JSON") << std::endl;
+            std::cout << "INFO: " << env_var << " found in " << get_env_var("LED_MON_SETTINGS_JSON") << std::endl;
 
             env_vars.insert(std::pair<std::string,std::string>(env_var,j.at(env_var)));
         }
         else{
-            std::cerr << "Config: " << env_var << " not found in " << get_env_var("LED_MON_SETTINGS_JSON") << std::endl;
+            std::cerr << "ERROR: " << env_var << " not found in " << get_env_var("LED_MON_SETTINGS_JSON") << std::endl;
         }
-
-        ifs.close();
     }
-
 }
 
 std::string Config::get_env_var(const char* env_var){
