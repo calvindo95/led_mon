@@ -10,6 +10,7 @@ class PostJson{
     int m_num_processors;
     double m_cpu_val;
     std::vector<double> m_cpu_vals;
+
     json m_json;
 
     void parse_json();
@@ -17,5 +18,6 @@ class PostJson{
     public:
     PostJson(double cpu_val);
     PostJson(int num_processors, std::vector<double> cpu_vals);
+  
     void post_json();
 };

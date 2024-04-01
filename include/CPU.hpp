@@ -27,6 +27,15 @@ class CPU{
         };
 
         std::vector<last_values> vec_lv;
+        bool m_flag = false;
+
+        // queue for per cpu
+        TSQueue<std::vector<double>> m_que_per_cpu;
+        
+        // queue for single cpu
+        TSQueue<double> m_que_cpu;
+
+        void monitor_cpu();
 
     public:
         CPU();
@@ -35,6 +44,9 @@ class CPU{
         double calc_cpu();
 
         void print_multi_cpu();   // prints per core cpu usage
+        void print_cpu();       // prints overall cpu usage
+
+        void print_per_cpu();   // prints per core cpu usage
         void print_cpu();       // prints overall cpu usage
 
 

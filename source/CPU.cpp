@@ -25,6 +25,40 @@ CPU::CPU(){
 
         vec_lv.push_back(lv);
     }
+
+    // initialize monitoring thread
+    std::thread t1(&CPU::monitor_cpu, this);
+    t1.detach();
+}
+
+void CPU::monitor_cpu(){
+    Config& config = Config::get_config();
+
+    bool per_cpu;
+    std::istringstream(config.get_env_var("PER_CPU")) >> std::boolalpha >> per_cpu;
+
+    // if multi or single cpu
+    if(per_cpu){
+        while(true){
+            std::vector<double> cpu_vals = calc_per_cpu();
+            if(m_flag){
+                m_que_per_cpu.push(cpu_vals);
+                m_flag = false;
+            }
+            usleep(200000);
+        }
+    }
+    else{
+        while(true){
+            double cpu_val = calc_cpu();
+            if(m_flag){
+                m_que_cpu.push(cpu_val);
+                m_flag = false;
+            }
+            usleep(200000);
+        }
+    }
+
 }
 
 void CPU::print_multi_cpu(){
@@ -142,6 +176,7 @@ extern "C"{
     double* calc_Per_CPU(int size){
         // Convert vector to array
         std::vector<double> tmp_vec = cpu.calc_multi_cpu();
+
         double* d_arr = new double[size];
 
         std::copy(tmp_vec.begin(), tmp_vec.end(), d_arr);

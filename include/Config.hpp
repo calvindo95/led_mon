@@ -23,5 +23,4 @@ class Config{
     public:
         static Config& get_config();
         std::string get_env_var(const char* env_var);
-
 };
