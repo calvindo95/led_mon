@@ -13,8 +13,10 @@
 
 #include <FixedDeque.hpp> // wrapper deque class to calculate rolling average
 #include <TSQueue.hpp>
-
 #include <Config.hpp>
+#include <json.hpp>
+
+using json = nlohmann::json;
 
 class CPU{
     private:
@@ -26,30 +28,24 @@ class CPU{
             FixedDeque<double,10> fd;
         };
 
+        Config& m_config = Config::get_config();
         std::vector<last_values> vec_lv;
-        bool m_flag = false;
-
-        // queue for per cpu
-        TSQueue<std::vector<double>> m_que_per_cpu;
-        
-        // queue for single cpu
-        TSQueue<double> m_que_cpu;
-
-        void monitor_cpu();
+        bool m_is_multi_cpu = false;
 
     public:
         CPU();
 
+        int m_num_processors;
         std::vector<double> calc_multi_cpu();
         double calc_cpu();
 
         void print_multi_cpu();   // prints per core cpu usage
         void print_cpu();       // prints overall cpu usage
 
-        void print_per_cpu();   // prints per core cpu usage
-        void print_cpu();       // prints overall cpu usage
+        bool is_multi_cpu();
 
+        json get_json(std::vector<double>);
+        json get_json(double);
 
-        int numProcessors;
 };
 
