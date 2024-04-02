@@ -10,8 +10,6 @@ class ProcessLoop{
         bool m_mem_mon = false;
 
         Config& m_config = Config::get_config();
-        
-        bool tmp_bool;
         CPU m_cpu;
 
         void process();
