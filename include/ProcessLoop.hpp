@@ -12,7 +12,6 @@ class ProcessLoop{
         Config& m_config = Config::get_config();
         
         bool tmp_bool;
-        std::istringstream(m_config.get_env_var("PER_CPU")) >> std::boolalpha >> tmp_bool;
         CPU m_cpu;
 
         void process();
