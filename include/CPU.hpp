@@ -15,10 +15,11 @@
 #include <TSQueue.hpp>
 #include <Config.hpp>
 #include <json.hpp>
+#include <Monitor.hpp>
 
 using json = nlohmann::json;
 
-class CPU{
+class CPU: public Monitor{
     private:
         struct last_values{
             unsigned long long lastTotalUser;
@@ -35,6 +36,8 @@ class CPU{
     public:
         CPU();
 
+        // These 3 variables/functions need to be moved to private once I figure out extern C stuff
+        // Or I remove extern C entirely and remove python lib
         int m_num_processors;
         std::vector<double> calc_multi_cpu();
         double calc_cpu();
@@ -43,9 +46,7 @@ class CPU{
         void print_cpu();       // prints overall cpu usage
 
         bool is_multi_cpu();
-
-        json get_json(std::vector<double>);
-        json get_json(double);
-
+        
+        json get_json();
 };
 
