@@ -127,28 +127,31 @@ bool CPU::is_multi_cpu(){
     return m_is_multi_cpu;
 }
 
-json CPU::get_json(std::vector<double> cpu_vals){
-    json j;
+json CPU::get_json(){
+    if(m_is_multi_cpu){
+        std::vector<double> cpu_vals = calc_multi_cpu();
+        json j;
 
-    j["cpuNum"] = m_num_processors - 1;
+        j["cpuNum"] = m_num_processors - 1;
 
-    for(int i = 0; i < m_num_processors; i++){
-        std::stringstream ss;
-        ss << "cpu" << i;
+        for(int i = 0; i < m_num_processors; i++){
+            std::stringstream ss;
+            ss << "cpu" << i;
 
-        j["CPU"][ss.str()] = cpu_vals[i];
+            j["CPU"][ss.str()] = cpu_vals[i];
+        }
+
+        return j;
     }
+    else{
+        double cpu_val = calc_cpu();
+        json j;
 
-    return j;
-}
+        j["cpuNum"] = 0;
+        j["CPU"]["cpu0"] = cpu_val;
 
-json CPU::get_json(double cpu_val){
-    json j;
-
-    j["cpuNum"] = 0;
-    j["CPU"]["cpu0"] = cpu_val;
-
-    return j;
+        return j;
+    }
 }
 
 extern "C"{

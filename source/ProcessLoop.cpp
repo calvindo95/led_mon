@@ -13,10 +13,10 @@ void ProcessLoop::process(){
             json j_cpu;
             
             if(m_cpu.is_multi_cpu()){
-                j_cpu.update(m_cpu.get_json(m_cpu.calc_multi_cpu()));
+                j_cpu.update(m_cpu.get_json());
             }
             else{
-                j_cpu.update(m_cpu.get_json(m_cpu.calc_cpu()));
+                j_cpu.update(m_cpu.get_json());
             }
 
             pj.update_json(j_cpu);

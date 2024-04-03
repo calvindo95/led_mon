@@ -2,8 +2,8 @@
 
 Config::Config(){
     update_config("LED_MON_SETTINGS_JSON");
-    update_config("HTTP_SERVER_IP");
-    update_config("HTTP_SERVER_PORT");
+    update_config("LED_MON_SERVER_IP");
+    update_config("LED_MON_SERVER_PORT");
     update_config("uSECONDS");
     update_config("PER_CPU");
 }
