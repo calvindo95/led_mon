@@ -19,7 +19,7 @@ void PostJson::post_json(){
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
         std::stringstream ss;
-        ss << "http://" << config.get_env_var("HTTP_SERVER_IP") << ":" << config.get_env_var("HTTP_SERVER_PORT");
+        ss << "http://" << config.get_env_var("LED_MON_SERVER_IP") << ":" << config.get_env_var("LED_MON_SERVER_PORT");
 
         curl_easy_setopt(curl, CURLOPT_URL, ss.str().c_str());
         curl_easy_setopt(curl, CURLOPT_COPYPOSTFIELDS, m_json.dump().c_str());
