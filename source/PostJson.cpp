@@ -1,33 +1,6 @@
 #include <PostJson.hpp>
 
-PostJson::PostJson(double cpu_val):m_num_processors(1), m_cpu_val(cpu_val){
-    parse_json();
-}
-
-PostJson::PostJson(int num_processors, std::vector<double> cpu_vals):m_num_processors(num_processors), m_cpu_vals(cpu_vals){
-    parse_json();
-}
-
-void PostJson::parse_json(){
-    m_json["cpuNum"] = m_num_processors-1;
-
-    // Parse json as single cpu
-    if(m_num_processors == 1){
-        m_json["CPU"]["cpu0"] = m_cpu_val;
-    }
-    // Parse json as multi cpu
-    else{
-        for(int i = 0; i < m_num_processors; i++){
-            std::stringstream ss;
-            ss << "cpu" << i;
-
-            m_json["CPU"][ss.str()] = m_cpu_vals[i];
-        }
-    }
-
-    // Uncomment this to debug json file being posted to led_mon_server
-    //std::cout << m_json.dump() << std::endl;
-}
+PostJson::PostJson(){}
 
 void PostJson::post_json(){
     CURL *curl;
@@ -60,4 +33,9 @@ void PostJson::post_json(){
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
+}
+
+// Will update/insert json object into PostJson json object
+void PostJson::update_json(json j){
+    m_json.update(j);
 }

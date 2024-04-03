@@ -1,20 +1,22 @@
 #include <CPU.hpp>
 
 CPU::CPU(){
+    std::istringstream(m_config.get_env_var("PER_CPU")) >> std::boolalpha >> m_is_multi_cpu;
+
     FILE* file_process_cpu;
     struct tms timeSample;
     char line[128];
 
     // calculate number of process
     file_process_cpu = fopen("/proc/cpuinfo", "r");
-    numProcessors = 0;
+    m_num_processors = 0;
     while(fgets(line, 128, file_process_cpu) != NULL){
-        if (strncmp(line, "processor", 9) == 0) numProcessors++;
+        if (strncmp(line, "processor", 9) == 0) m_num_processors++;
     }
     fclose(file_process_cpu);
 
     // initialize last_values struct for each cpu core
-    for(int i = 0; i < numProcessors; i++){
+    for(int i = 0; i < m_num_processors; i++){
         last_values lv;
 
         lv.lastTotalUser = 0.0;
@@ -25,40 +27,6 @@ CPU::CPU(){
 
         vec_lv.push_back(lv);
     }
-
-    // initialize monitoring thread
-    std::thread t1(&CPU::monitor_cpu, this);
-    t1.detach();
-}
-
-void CPU::monitor_cpu(){
-    Config& config = Config::get_config();
-
-    bool per_cpu;
-    std::istringstream(config.get_env_var("PER_CPU")) >> std::boolalpha >> per_cpu;
-
-    // if multi or single cpu
-    if(per_cpu){
-        while(true){
-            std::vector<double> cpu_vals = calc_per_cpu();
-            if(m_flag){
-                m_que_per_cpu.push(cpu_vals);
-                m_flag = false;
-            }
-            usleep(200000);
-        }
-    }
-    else{
-        while(true){
-            double cpu_val = calc_cpu();
-            if(m_flag){
-                m_que_cpu.push(cpu_val);
-                m_flag = false;
-            }
-            usleep(200000);
-        }
-    }
-
 }
 
 void CPU::print_multi_cpu(){
@@ -74,7 +42,7 @@ std::vector<double> CPU::calc_multi_cpu(){
     std::ifstream file("/proc/stat");
     std::string proc_stat_line;
     while(std::getline(file, proc_stat_line)){
-        for(int i = 0; i < numProcessors; i++){
+        for(int i = 0; i < m_num_processors; i++){
 
             std::stringstream ss;
             ss << "cpu" << i << " ";
@@ -155,6 +123,34 @@ double CPU::calc_cpu(){
     return vec_lv[0].fd.get_avg();
 }
 
+bool CPU::is_multi_cpu(){
+    return m_is_multi_cpu;
+}
+
+json CPU::get_json(std::vector<double> cpu_vals){
+    json j;
+
+    j["cpuNum"] = m_num_processors - 1;
+
+    for(int i = 0; i < m_num_processors; i++){
+        std::stringstream ss;
+        ss << "cpu" << i;
+
+        j["CPU"][ss.str()] = cpu_vals[i];
+    }
+
+    return j;
+}
+
+json CPU::get_json(double cpu_val){
+    json j;
+
+    j["cpuNum"] = 0;
+    j["CPU"]["cpu0"] = cpu_val;
+
+    return j;
+}
+
 extern "C"{
     CPU cpu;
     CPU* create_CPU(){
@@ -176,7 +172,6 @@ extern "C"{
     double* calc_Per_CPU(int size){
         // Convert vector to array
         std::vector<double> tmp_vec = cpu.calc_multi_cpu();
-
         double* d_arr = new double[size];
 
         std::copy(tmp_vec.begin(), tmp_vec.end(), d_arr);
@@ -194,6 +189,6 @@ extern "C"{
     }
 
     int get_Num_CPU(){
-        return cpu.numProcessors;
+        return cpu.m_num_processors;
     }
 }
